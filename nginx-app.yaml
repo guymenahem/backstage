@@ -1,0 +1,31 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: nginx
+  description: All the good things nginx got to offer
+  labels:
+    app.kubernetes.io/instance: nginx
+  annotations:
+    backstage.io/kubernetes-id: nginx
+  tags:
+    - nginx
+    - python
+    - flask
+  links:
+    - url: https://admin.example-org.com
+      title: Admin Dashboard
+      icon: dashboard
+      type: admin-dashboard
+    - url: https://metrics.example-org.com
+      title: metrics
+      icon: analytics
+      type: metrics-dashboard
+    - url: https://logs.example-org.com
+      title: logs
+      icon: assignment
+      type: logs-dashboard  
+spec:
+  type: service
+  lifecycle: production
+  owner: nginx-team
+  system: public-websites
