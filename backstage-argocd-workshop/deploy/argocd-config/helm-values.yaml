@@ -1,0 +1,6 @@
+configs:
+  cm:
+    params:
+      server:
+        insecure: 'true'
+    accounts.admin: "apiKey, login"

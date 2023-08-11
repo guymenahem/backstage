@@ -1,0 +1,9 @@
+# kubernetes/backstage-secrets.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backstage-config
+  namespace: backstage
+data:
+  POSTGRES_PORT: "5432"
+  POSTGRES_HOST: "postgres.backstage.svc.cluster.local"
