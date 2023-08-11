@@ -1,10 +1,9 @@
 #!/bin/sh
 
-
 # Build Parameters
 BACKSTAGE_IMAGE=backstage-argocd-workshop:1.0.2
-GITHUB_TOKEN="aaa"
-ARGOCD_AUTH_TOKEN="bbb"
+GITHUB_TOKEN=""
+ARGOCD_AUTH_TOKEN=""
 POSTGRES_USER="backstage"
 POSTGRES_PASSWORD="hunter2"
 
@@ -12,6 +11,17 @@ POSTGRES_PASSWORD="hunter2"
 SHOULD_BUILD_IMAGE=true
 SHOULD_DEPLOY_ARGO=true
 SHOULD_LOAD_IMAGE_TO_KIND=true
+
+function base64_str()
+{
+    STR=$1
+
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        BASED64=$(echo $STR'\c' | gbase64 -w 0)
+        return
+    fi
+    BASED64=$(echo -n "$STR" | base64 -w 0)
+}
 
 # Build Image
 if $SHOULD_BUILD_IMAGE ; then
@@ -41,14 +51,18 @@ fi
 kubectl create namespace backstage --dry-run=client -o yaml | kubectl apply -f -
 
 # Configure Postgres Secrets
-yq --inplace ".data.POSTGRES_USER = \"$(echo $POSTGRES_USER | base64)\"" deploy/postgres-resources/pg-secret.yaml
-yq --inplace ".data.POSTGRES_PASSWORD = \"$(echo $POSTGRES_PASSWORD | base64)\"" deploy/postgres-resources/pg-secret.yaml
-yq --inplace ".data.POSTGRES_USER = \"$(echo $POSTGRES_USER | base64)\"" deploy/backstage-resources/bs-secret.yaml
-yq --inplace ".data.POSTGRES_PASSWORD = \"$(echo $POSTGRES_PASSWORD | base64)\"" deploy/backstage-resources/bs-secret.yaml
+base64_str $POSTGRES_USER
+yq --inplace ".data.POSTGRES_USER = \"$BASED64\"" deploy/postgres-resources/pg-secret.yaml
+yq --inplace ".data.POSTGRES_USER = \"$BASED64\"" deploy/backstage-resources/bs-secret.yaml
+base64_str $POSTGRES_PASSWORD
+yq --inplace ".data.POSTGRES_PASSWORD = \"$BASED64\"" deploy/postgres-resources/pg-secret.yaml
+yq --inplace ".data.POSTGRES_PASSWORD = \"$BASED64\"" deploy/backstage-resources/bs-secret.yaml
 
 # Configure Backstage Secrets 
-yq --inplace ".data.GITHUB_TOKEN = \"$(echo $GITHUB_TOKEN | base64)\"" deploy/backstage-resources/bs-secret.yaml
-yq --inplace ".data.ARGOCD_AUTH_TOKEN = \"$(echo $ARGOCD_AUTH_TOKEN | base64)\"" deploy/backstage-resources/bs-secret.yaml
+base64_str $GITHUB_TOKEN
+yq --inplace ".data.GITHUB_TOKEN = \"$BASED64\"" deploy/backstage-resources/bs-secret.yaml
+base64_str $ARGOCD_AUTH_TOKEN
+yq --inplace ".data.ARGOCD_AUTH_TOKEN = \"$BASED64\"" deploy/backstage-resources/bs-secret.yaml
 
 # Deploy Postgres
 kubectl apply -f deploy/postgres-resources
