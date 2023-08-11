@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: users-api
+spec:
+  destination:
+    name: ''
+    namespace: default
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: 'backstage-argocd-workshop/deploy/application/'
+    repoURL: 'https://github.com/guymenahem/backstage/'
+    targetRevision: backstage-argo-workshop
+  sources: []
+  project: default
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
