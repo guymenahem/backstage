@@ -50,13 +50,12 @@ proxy:
   #   target: 'https://example.com'
   #   changeOrigin: true
   '/argocd/api':
-  target: https://argocd-server.argocd.svc.cluster.local/api/v1/
-  changeOrigin: true
-  # only if your argocd api has self-signed cert
-  secure: false
-  headers:
-    Cookie:
-      $env: ${ARGOCD_AUTH_TOKEN}
+    target: "https://argocd-server.argocd.svc.cluster.local/api/v1/"
+    changeOrigin: true
+    # only if your argocd api has self-signed cert
+    secure: false
+    headers:
+      Cookie: ${ARGOCD_AUTH_TOKEN}
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
@@ -82,7 +81,13 @@ catalog:
     pullRequestBranchName: backstage-integration
   rules:
     - allow: [Component, System, API, Resource, Location]
+
   locations:
+    - type: url
+      target: https://github.com/guymenahem/backstage/blob/backstage-argo-workshop/backstage-argocd-workshop/deploy/sample-application/app-component.yaml
+      rules:
+        - allow: [Component, System, API, Resource, Location]
+
     # Local example data, file locations are relative to the backend process, typically `packages/backend`
     - type: file
       target: ../../examples/entities.yaml

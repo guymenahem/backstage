@@ -2,18 +2,19 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: users-api
+  namespace: argocd
 spec:
   destination:
     name: ''
-    namespace: default
+    namespace: ''
     server: 'https://kubernetes.default.svc'
   source:
-    path: 'backstage-argocd-workshop/deploy/application/'
-    repoURL: 'https://github.com/guymenahem/backstage/'
-    targetRevision: backstage-argo-workshop
+    path: backstage/exmaple-application
+    repoURL: 'https://github.com/guymenahem/how-to-devops-tools'
+    targetRevision: main
+    directory:
+      include: example-app.yaml
   sources: []
   project: default
   syncPolicy:
-    automated:
-      prune: false
-      selfHeal: false
+    automated: {}
