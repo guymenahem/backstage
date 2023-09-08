@@ -1,11 +1,13 @@
 #!/bin/sh
 
 # Build Parameters
-BACKSTAGE_IMAGE=backstage-argocd-workshop:1.0.2
+BACKSTAGE_IMAGE=backstage-argocd-workshop:1.0.4
 BACKSTAGE_REGISTRY=ghcr.io/guymenahem/backstage/
 GITHUB_TOKEN=""
+CATALOG_URL="https://github.com/guymenahem/backstage/blob/backstage-argo-workshop/backstage-argocd-workshop/deploy/sample-application/app-component.yaml"
 POSTGRES_USER="backstage"
 POSTGRES_PASSWORD="hunter2"
+BASE_URL="localhost"
 
 # Build Options
 SHOULD_BUILD_IMAGE=true
@@ -24,6 +26,7 @@ function base64_str()
     fi
     BASED64=$(echo -n "$STR" | base64 -w 0)
 }
+
 
 # Build Image
 if $SHOULD_BUILD_IMAGE ; then
@@ -72,6 +75,9 @@ base64_str $GITHUB_TOKEN
 yq --inplace ".data.GITHUB_TOKEN = \"$BASED64\"" deploy/backstage-resources/bs-secret.yaml
 base64_str "argocd.token="$ARGOCD_AUTH_TOKEN
 yq --inplace ".data.ARGOCD_AUTH_TOKEN = \"$BASED64\"" deploy/backstage-resources/bs-secret.yaml
+
+yq --inplace ".data.CATALOG_LOCATION = \"$CATALOG_URL\"" deploy/backstage-resources/bs-config.yaml
+yq --inplace ".data.BASE_URL = \"$BASE_URL\"" deploy/backstage-resources/bs-config.yaml
 
 # Deploy Postgres
 kubectl apply -f deploy/postgres-resources

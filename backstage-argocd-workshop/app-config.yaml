@@ -84,7 +84,7 @@ catalog:
 
   locations:
     - type: url
-      target: https://github.com/guymenahem/backstage/blob/backstage-argo-workshop/backstage-argocd-workshop/deploy/sample-application/app-component.yaml
+      target: ${CATALOG_LOCATION}
       rules:
         - allow: [Component, System, API, Resource, Location]
 
