@@ -9,3 +9,4 @@ data:
   POSTGRES_HOST: "postgres.backstage.svc.cluster.local"
   CATALOG_LOCATION: "https://github.com/guymenahem/backstage/blob/backstage-argo-workshop/backstage-argocd-workshop/deploy/sample-application/app-component.yaml"
   BASE_URL: "localhost"
+  ARGOCD_URL: "https://argocd-server.argocd.svc.cluster.local/api/v1/"

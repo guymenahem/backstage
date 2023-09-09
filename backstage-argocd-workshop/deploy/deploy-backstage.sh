@@ -8,6 +8,7 @@ CATALOG_URL="https://github.com/guymenahem/backstage/blob/backstage-argo-worksho
 POSTGRES_USER="backstage"
 POSTGRES_PASSWORD="hunter2"
 BASE_URL="localhost"
+ARGOCD_URL="https://argocd-server.argocd.svc.cluster.local/api/v1/"
 
 # Build Options
 SHOULD_BUILD_IMAGE=true
@@ -78,6 +79,7 @@ yq --inplace ".data.ARGOCD_AUTH_TOKEN = \"$BASED64\"" deploy/backstage-resources
 
 yq --inplace ".data.CATALOG_LOCATION = \"$CATALOG_URL\"" deploy/backstage-resources/bs-config.yaml
 yq --inplace ".data.BASE_URL = \"$BASE_URL\"" deploy/backstage-resources/bs-config.yaml
+yq --inplace ".data.ARGOCD_URL = \"$ARGOCD_URL\"" deploy/backstage-resources/bs-config.yaml
 
 # Deploy Postgres
 kubectl apply -f deploy/postgres-resources
