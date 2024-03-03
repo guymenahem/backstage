@@ -33,6 +33,9 @@ import { AppRouter, FlatRoutes } from '@backstage/core-app-api';
 import { CatalogGraphPage } from '@backstage/plugin-catalog-graph';
 import { RequirePermission } from '@backstage/plugin-permission-react';
 import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common/alpha';
+import LightIcon from '@material-ui/icons/WbSunny';
+import { UnifiedThemeProvider } from '@backstage/theme';
+import { platformersTheme } from './theme/platformersTheme';
 
 const app = createApp({
   apis,
@@ -53,6 +56,18 @@ const app = createApp({
       catalogIndex: catalogPlugin.routes.catalogIndex,
     });
   },
+
+  themes: [
+    {
+      id: 'platformers-theme',
+      title: 'Platformers Theme',
+      variant: 'light',
+      icon: <LightIcon />,
+      Provider: ({ children }) => (
+        <UnifiedThemeProvider theme={platformersTheme} children={children} />
+      ),
+    },
+  ],
 });
 
 const routes = (
